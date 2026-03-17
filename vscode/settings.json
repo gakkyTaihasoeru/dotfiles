@@ -90,6 +90,11 @@
   "python.testing.pytestEnabled": true,
   "python.testing.pytestArgs": ["tests"],
 
+  "[go]": {
+  "editor.defaultFormatter": "golang.go",
+  "editor.formatOnSave": true
+  },
+
   "[markdown]": {
     "files.trimTrailingWhitespace": false,
     "editor.wordWrap": "on",
@@ -104,6 +109,7 @@
   "[dockerfile]": {
     "editor.formatOnSave": true
   },
+
   "[dockercompose]": {
     "editor.insertSpaces": true,
     "editor.tabSize": 2,
@@ -116,6 +122,7 @@
     "editor.defaultFormatter": "redhat.vscode-yaml",
     "editor.formatOnSave": true
   },
+
   "[github-actions-workflow]": {
     "editor.defaultFormatter": "redhat.vscode-yaml",
     "editor.formatOnSave": true
@@ -123,7 +130,7 @@
 
   // =================================================
   // 7. UI / Workbench / Terminal / テレメトリ
-  "terminal.external.osxExec": "Warp.app",
+  "terminal.external.osxExec": "Ghostty.app",
   "terminal.integrated.fontSize": 14,
   "workbench.list.smoothScrolling": true,
   "workbench.settings.applyToAllProfiles": ["editor.fontSize"],

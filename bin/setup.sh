@@ -14,3 +14,4 @@ defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
 
 # 設定を反映させるためにFinderとSystemUIServerを再起動
 killall Finder
+killall SystemUIServer
