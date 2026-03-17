@@ -46,7 +46,6 @@ alias gd='git diff'
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border --preview "bat --style=numbers --color=always {} | head -200"'
 
-# Ctrl+R は Warp の独自履歴UIと競合するため、Warp上では fzf-history は呼ばれない
 # fzf 自体は他の関数 (ff, fz など) で有効
 export FZF_CTRL_R_OPTS="--height 40% --layout=reverse"
 
