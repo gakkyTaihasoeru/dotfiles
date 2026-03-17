@@ -1,0 +1,16 @@
+[core]
+	editor = vim -c \"set fenc=utf-8\"
+	commentChar = >
+	quotepath = false
+[merge]
+	ff = false
+	ff = false
+[pull]
+	ff = only
+	ff = only
+[push]
+	default = nothing
+[user]
+	name = xxxxxxx
+	email = xxxxxx@xxxx.com
+	signingkey = ssh-ljlj fkjdslfjklsajflsakjfal;fjaxxxxxxxxxxxxxxxxx

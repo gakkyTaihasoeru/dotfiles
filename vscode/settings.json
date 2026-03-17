@@ -1,0 +1,135 @@
+{
+  // =================================================
+  // 0. 共通設定: VSCode 全体に影響する基本設定
+  "editor.fontFamily": "Hack Nerd Font Mono, Menlo",
+  "editor.fontSize": 16,
+  "window.zoomLevel": 0,
+  "workbench.colorTheme": "One Dark Pro",
+
+  // =================================================
+  // 1. エディタ動作／内部操作設定
+  "breadcrumbs.enabled": true,
+  "editor.accessibilitySupport": "off",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always",
+    "source.fixAll": "always"
+  },
+  "editor.cursorBlinking": "smooth",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.minimap.enabled": false,
+  "editor.renderLineHighlight": "all",
+  "editor.renderWhitespace": "all",
+  "editor.showFoldingControls": "always",
+  "editor.smoothScrolling": true,
+  "editor.tabSize": 2,
+  "editor.wordWrap": "on",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+
+  // =================================================
+  // 2. ファイル I/O / 保存動作
+  "explorer.confirmDragAndDrop": false,
+  "files.autoSave": "onFocusChange",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+
+  // =================================================
+  // 3. 拡張補助 / 表示／装飾 / クリーンアップ
+  "errorLens.enabled": true,
+  "errorLens.fontSize": "14px",
+  "errorLens.fontFamily": "Hack Nerd Font Mono, Menlo",
+
+  // =================================================
+  // 4. Git / GitHub / AI / Copilot 等の外部連携
+  "git.autofetch": true,
+  "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+  "github.copilot.chat.localeOverride": "ja",
+  "github.copilot.enable": {
+    "*": true
+  },
+
+  // =================================================
+  // 5. YAML / IaC / Terraform / AWS 関連
+  "yaml.customTags": [
+    "!And sequence",
+    "!Base64",
+    "!Cidr sequence",
+    "!Condition",
+    "!Equals sequence",
+    "!FindInMap sequence",
+    "!GetAtt",
+    "!GetAZs",
+    "!If sequence",
+    "!ImportValue",
+    "!Join sequence",
+    "!Not sequence",
+    "!Or sequence",
+    "!Ref",
+    "!Select sequence",
+    "!Split sequence",
+    "!Sub",
+    "!Transform mapping"
+  ],
+  "yaml.format.enable": true,
+  "yaml.validate": true,
+  "yaml.completion": true,
+  "[terraform]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true
+  },
+
+  // =================================================
+  // 6. 各言語 / ファイルタイプ別設定
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true
+  },
+  "python.analysis.typeCheckingMode": "strict",
+  "python.analysis.autoSearchPaths": true,
+  "python.analysis.useLibraryCodeForTypes": true,
+  "python.testing.pytestEnabled": true,
+  "python.testing.pytestArgs": ["tests"],
+
+  "[markdown]": {
+    "files.trimTrailingWhitespace": false,
+    "editor.wordWrap": "on",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  },
+  "markdown.styles": [".vscode/markdown-custom.css"],
+  "markdown.preview.scrollPreviewWithEditor": false,
+  "markdown.preview.scrollEditorWithPreview": false,
+  "markdown.math.enabled": true,
+
+  "[dockerfile]": {
+    "editor.formatOnSave": true
+  },
+  "[dockercompose]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced",
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    },
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSave": true
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSave": true
+  },
+
+  // =================================================
+  // 7. UI / Workbench / Terminal / テレメトリ
+  "terminal.external.osxExec": "Warp.app",
+  "terminal.integrated.fontSize": 14,
+  "workbench.list.smoothScrolling": true,
+  "workbench.settings.applyToAllProfiles": ["editor.fontSize"],
+  "workbench.startupEditor": "newUntitledFile",
+  "redhat.telemetry.enabled": false,
+  "gitlens.ai.model": "vscode",
+  "aws.cloudformation.telemetry.enabled": false,
+  "workbench.editor.enablePreview": false
+}

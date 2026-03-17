@@ -1,0 +1,40 @@
+# CLI Tools (Infrastructure / SRE)
+brew "coreutils"
+brew "fd"
+brew "fzf"
+brew "git"
+brew "gnu-sed"
+brew "mise"
+brew "starship"
+brew "tree"
+brew "zip"
+brew "zoxide"
+brew "zsh-autosuggestions"
+brew "zsh-completions"
+brew "zsh-syntax-highlighting"
+
+# GUI Apps (Business / Development)
+cask "1password"
+cask "1password-cli"
+cask "docker-desktop"
+cask "ghostty"
+cask "visual-studio-code"
+
+# Fonts
+cask "font-hack-nerd-font"
+cask "font-roboto-mono-nerd-font"
+
+# VS Code Extensions (Engineering Focus)
+vscode "ms-ceintl.vscode-language-pack-ja"
+vscode "golang.go"
+vscode "hashicorp.terraform"
+vscode "ms-kubernetes-tools.vscode-kubernetes-tools"
+vscode "github.copilot-chat"
+vscode "github.vscode-github-actions"
+vscode "github.vscode-pull-request-github"
+vscode "redhat.vscode-yaml"
+vscode "eamodio.gitlens"
+vscode "usernamehw.errorlens"
+vscode "ms-vscode-remote.remote-containers"
+vscode "tombi-toml.tombi"
+vscode "mechatroner.rainbow-csv"

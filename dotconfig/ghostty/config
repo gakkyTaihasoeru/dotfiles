@@ -1,0 +1,17 @@
+# --- 外観設定 ---
+theme = dark:tokyonight,light:dayfox
+font-family = "Hack Nerd Font"
+font-size = 14
+window-decoration = false
+confirm-close-surface = false
+
+# --- 挙動設定 ---
+# OptionキーをMetaキー(Alt)として扱う（Emacs/Vim/Shell移動に必須）
+macos-option-as-alt = true
+
+# クリップボード連携
+copy-on-select = true
+
+# --- キーバインド (水平思考による効率化) ---
+# Command + Enter でフルスクリーン切替
+keybind = cmd+enter=toggle_fullscreen
