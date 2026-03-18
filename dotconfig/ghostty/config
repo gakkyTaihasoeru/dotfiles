@@ -2,7 +2,7 @@
 theme = dark:tokyonight,light:dayfox
 font-family = "Hack Nerd Font"
 font-size = 14
-window-decoration = false
+window-decoration = true
 confirm-close-surface = false
 
 # --- 挙動設定 ---

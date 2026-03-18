@@ -24,7 +24,7 @@
   "editor.smoothScrolling": true,
   "editor.tabSize": 2,
   "editor.wordWrap": "on",
-  "javascript.updateImportsOnFileMove.enabled": "always",
+  "js/ts.updateImportsOnFileMove.enabled": "always",
 
   // =================================================
   // 2. ファイル I/O / 保存動作
