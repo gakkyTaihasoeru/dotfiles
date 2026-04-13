@@ -56,6 +56,7 @@ bash bin/install.sh
 bash bin/install.sh --skip-brew
 bash bin/install.sh --skip-mise
 bash bin/install.sh --skip-macos
+bash bin/install.sh --dry-run
 ```
 
 ### 5. macOS システム設定だけを確認したい場合
@@ -89,6 +90,10 @@ dotfiles/
 │       └── config.toml           # mise ツールバージョン管理
 ├── git/
 │   └── .gitconfig                # Git グローバル設定
+├── scripts/
+│   ├── validate_json.py          # JSON / JSONC 検証
+│   ├── validate_toml.py          # TOML 検証
+│   └── validate_yaml.py          # YAML 検証
 ├── vscode/
 │   └── settings.json             # VSCode ユーザー設定
 └── zsh/
@@ -120,6 +125,8 @@ dotfiles/
 | go / python / node | 言語ランタイム |
 | neovim | エディタ |
 | gh | GitHub CLI |
+
+主要な言語・基盤ツールは再現性を上げるために major / minor を固定しています。
 
 ### VSCode 主要拡張
 

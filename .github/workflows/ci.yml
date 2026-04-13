@@ -46,7 +46,7 @@ jobs:
           set -e
           find . -name '*.json' -not -path './.git/*' -not -path './node_modules/*' | while read -r f; do
             echo "→ $f"
-            if python3 -c 'import json, pathlib, re, sys; path = pathlib.Path(sys.argv[1]); text = path.read_text(encoding="utf-8"); is_jsonc = path.parts[:1] in [("vscode",), (".vscode",)]; content = "\n".join(line for line in text.splitlines() if not re.match(r"^\s*//", line)) if is_jsonc else text; json.loads(content)' "$f"; then
+            if python3 ./scripts/validate_json.py "$f"; then
               echo "  ✓ OK"
             else
               echo "  ✗ FAILED"
@@ -59,7 +59,7 @@ jobs:
           set -e
           find . -name '*.toml' -not -path './.git/*' -not -path './node_modules/*' | while read -r f; do
             echo "→ $f"
-            if python3 -c "import tomllib, sys; tomllib.load(open(sys.argv[1],'rb'))" "$f"; then
+            if python3 ./scripts/validate_toml.py "$f"; then
               echo "  ✓ OK"
             else
               echo "  ✗ FAILED"
@@ -73,7 +73,7 @@ jobs:
           python3 -m pip install --quiet pyyaml
           find . \( -name '*.yml' -o -name '*.yaml' \) -not -path './.git/*' -not -path './node_modules/*' | while read -r f; do
             echo "→ $f"
-            if python3 -c "import yaml, sys; yaml.safe_load(open(sys.argv[1]))" "$f"; then
+            if python3 ./scripts/validate_yaml.py "$f"; then
               echo "  ✓ OK"
             else
               echo "  ✗ FAILED"
