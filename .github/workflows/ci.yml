@@ -12,27 +12,53 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run ShellCheck
-        uses: ludeeus/action-shellcheck@master
+        uses: ludeeus/action-shellcheck@2.0.0
         with:
           scandir: ./bin
           severity: warning
 
   lint:
-    name: Lint (JSON / TOML)
+    name: Lint (JSON / TOML / YAML)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Validate JSON
         run: |
-          find . -name '*.json' -not -path './.git/*' | while read -r f; do
+          set -e
+          find . -name '*.json' -not -path './.git/*' -not -path './node_modules/*' | while read -r f; do
             echo "→ $f"
-            python3 -m json.tool "$f" > /dev/null && echo "  OK"
+            if python3 -c 'import json, pathlib, re, sys; path = pathlib.Path(sys.argv[1]); text = path.read_text(encoding="utf-8"); is_jsonc = path.parts[:1] in [("vscode",), (".vscode",)]; content = "\n".join(line for line in text.splitlines() if not re.match(r"^\s*//", line)) if is_jsonc else text; json.loads(content)' "$f"; then
+              echo "  ✓ OK"
+            else
+              echo "  ✗ FAILED"
+              exit 1
+            fi
           done
 
       - name: Validate TOML
         run: |
-          find . -name '*.toml' -not -path './.git/*' | while read -r f; do
+          set -e
+          find . -name '*.toml' -not -path './.git/*' -not -path './node_modules/*' | while read -r f; do
             echo "→ $f"
-            python3 -c "import tomllib, sys; tomllib.load(open(sys.argv[1],'rb'))" "$f" && echo "  OK"
+            if python3 -c "import tomllib, sys; tomllib.load(open(sys.argv[1],'rb'))" "$f"; then
+              echo "  ✓ OK"
+            else
+              echo "  ✗ FAILED"
+              exit 1
+            fi
+          done
+
+      - name: Validate YAML
+        run: |
+          set -e
+          python3 -m pip install --quiet pyyaml
+          find . \( -name '*.yml' -o -name '*.yaml' \) -not -path './.git/*' -not -path './node_modules/*' | while read -r f; do
+            echo "→ $f"
+            if python3 -c "import yaml, sys; yaml.safe_load(open(sys.argv[1]))" "$f"; then
+              echo "  ✓ OK"
+            else
+              echo "  ✗ FAILED"
+              exit 1
+            fi
           done
