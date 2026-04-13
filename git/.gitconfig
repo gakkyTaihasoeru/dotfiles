@@ -1,14 +1,50 @@
+# Core settings
 [core]
 	editor = vim -c \"set fenc=utf-8\"
 	commentChar = >
 	quotepath = false
+	pager = delta
+
+# User information
+[user]
+	name = gakkyTaihasoeru
+	email = gakky.taihasoeru@gmail.com
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPEdA62Ic8Ss32IkYxOCLM0bpJ5CxzFXNKn1zOSQ3MgO 
+
+# Commit settings
+[commit]
+	gpgsign = true
+
+# GPG settings
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+
+# Merge, pull, and push settings
 [merge]
 	ff = false
 [pull]
 	ff = only
 [push]
 	default = nothing
-[user]
-	name = xxxxxxx
-	email = xxxxxx@xxxx.com
-	signingkey = ssh-ljlj fkjdslfjklsajflsakjfal;fjaxxxxxxxxxxxxxxxxx
+
+# Diff settings
+[diff]
+	algorithm = histogram
+	colorMoved = default
+
+# Delta settings
+[delta]
+	navigate = true
+	side-by-side = true
+	line-numbers = true
+	syntax-theme = Monokai Extended
+
+# Interactive mode settings
+[interactive]
+	diffFilter = delta --color-only
+
+# Tools
+[ghq]
+	root = /Users/rh1/work/ghq

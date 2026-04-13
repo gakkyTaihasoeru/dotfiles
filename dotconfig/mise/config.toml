@@ -1,9 +1,14 @@
+[settings]
+paranoid = true
+not_found_auto_install = false
+disable_backends = ["asdf"]
+
 [tools]
 awscli = "latest"
 gemini-cli = "latest"
-gh = "latest"
 go = "latest"
 jq = "latest"
+k9s = "latest"
 kind = "latest"
 kubectl = "latest"
 minikube = "latest"
@@ -11,5 +16,6 @@ neovim = "latest"
 node = "latest"
 python = "latest"
 terraform = "latest"
-trivy = "latest"
 uv = "latest"
+helm = "latest"
+yq = "latest"

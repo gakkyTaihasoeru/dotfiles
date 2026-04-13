@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  shellcheck:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: ./bin
+          severity: warning
+
+  lint:
+    name: Lint (JSON / TOML)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate JSON
+        run: |
+          find . -name '*.json' -not -path './.git/*' | while read -r f; do
+            echo "→ $f"
+            python3 -m json.tool "$f" > /dev/null && echo "  OK"
+          done
+
+      - name: Validate TOML
+        run: |
+          find . -name '*.toml' -not -path './.git/*' | while read -r f; do
+            echo "→ $f"
+            python3 -c "import tomllib, sys; tomllib.load(open(sys.argv[1],'rb'))" "$f" && echo "  OK"
+          done
