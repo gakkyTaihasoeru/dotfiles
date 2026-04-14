@@ -35,6 +35,14 @@ jobs:
             fi
           done
 
+  install-dry-run:
+    name: Install Dry Run
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate install flow with dry-run
+        run: bash ./bin/install.sh --dry-run --skip-brew --skip-mise --skip-macos
+
   lint:
     name: Lint (JSON / TOML / YAML)
     runs-on: ubuntu-latest
