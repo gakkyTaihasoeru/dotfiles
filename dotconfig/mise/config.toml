@@ -6,6 +6,7 @@ disable_backends = ["asdf"]
 [tools]
 awscli = "latest"
 gemini-cli = "latest"
+gh = "latest"
 go = "1.24"
 jq = "latest"
 k9s = "latest"
