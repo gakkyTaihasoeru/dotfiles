@@ -69,7 +69,6 @@ else
   alias ls='ls -F'
   alias ll='ls -alF'
   alias la='ls -AF'
-  has tree && alias tree='tree -C'
 fi
 
 if has gsed; then
