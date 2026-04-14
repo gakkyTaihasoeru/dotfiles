@@ -4,7 +4,7 @@
   "editor.fontFamily": "Hack Nerd Font Mono, Menlo",
   "editor.fontSize": 16,
   "window.zoomLevel": 0,
-  "workbench.colorTheme": "One Dark Pro",
+  "workbench.colorTheme": "GitHub Dark Default",
 
   // =================================================
   // 1. エディタ動作／内部操作設定
@@ -34,15 +34,8 @@
   "files.trimTrailingWhitespace": true,
 
   // =================================================
-  // 3. 拡張補助 / 表示／装飾 / クリーンアップ
-  "errorLens.enabled": true,
-  "errorLens.fontSize": "14px",
-  "errorLens.fontFamily": "Hack Nerd Font Mono, Menlo",
-
-  // =================================================
   // 4. Git / GitHub / AI / Copilot 等の外部連携
   "git.autofetch": true,
-  "gitlens.ai.vscode.model": "copilot:gpt-4.1",
   "github.copilot.chat.localeOverride": "ja",
   "github.copilot.enable": {
     "*": true
@@ -80,20 +73,8 @@
 
   // =================================================
   // 6. 各言語 / ファイルタイプ別設定
-  "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter",
-    "editor.formatOnSave": true
-  },
-  "python.analysis.typeCheckingMode": "strict",
-  "python.analysis.autoSearchPaths": true,
-  "python.analysis.useLibraryCodeForTypes": true,
   "python.testing.pytestEnabled": true,
   "python.testing.pytestArgs": ["tests"],
-
-  "[go]": {
-  "editor.defaultFormatter": "golang.go",
-  "editor.formatOnSave": true
-  },
 
   "[markdown]": {
     "files.trimTrailingWhitespace": false,
@@ -105,10 +86,6 @@
   "markdown.preview.scrollPreviewWithEditor": false,
   "markdown.preview.scrollEditorWithPreview": false,
   "markdown.math.enabled": true,
-
-  "[dockerfile]": {
-    "editor.formatOnSave": true
-  },
 
   "[dockercompose]": {
     "editor.insertSpaces": true,
@@ -122,7 +99,6 @@
     "editor.defaultFormatter": "redhat.vscode-yaml",
     "editor.formatOnSave": true
   },
-
   "[github-actions-workflow]": {
     "editor.defaultFormatter": "redhat.vscode-yaml",
     "editor.formatOnSave": true
@@ -132,11 +108,10 @@
   // 7. UI / Workbench / Terminal / テレメトリ
   "terminal.external.osxExec": "Ghostty.app",
   "terminal.integrated.fontSize": 14,
+  "terminal.integrated.gpuAcceleration": "auto",
   "workbench.list.smoothScrolling": true,
   "workbench.settings.applyToAllProfiles": ["editor.fontSize"],
   "workbench.startupEditor": "newUntitledFile",
   "redhat.telemetry.enabled": false,
-  "gitlens.ai.model": "vscode",
-  "aws.cloudformation.telemetry.enabled": false,
   "workbench.editor.enablePreview": false
 }

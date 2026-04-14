@@ -1,19 +1,17 @@
 # --- 外観設定 ---
-theme = dark:tokyonight,light:dayfox
+theme = dark:GitHub Dark Default,light:GitHub Light Default
 font-family = "Hack Nerd Font"
 font-size = 14
+term = xterm-ghostty
 
-font-thicken = true
-font-thicken-strength = 200
+window-decoration = auto
+confirm-close-surface = true
 
-window-decoration = true
 window-save-state = always
 
 quit-after-last-window-closed = true
 
-confirm-close-surface = false
-
-background-opacity = 0.9
+background-opacity = 1
 
 macos-titlebar-style = transparent
 
@@ -24,11 +22,16 @@ macos-titlebar-proxy-icon = visible
 macos-option-as-alt = true
 
 macos-auto-secure-input = true
+working-directory = home
 
 # シェル統合
 shell-integration = detect
 
 shell-integration-features = cursor,sudo,title,path
+
+# Editor / clipboard friendly defaults
+clipboard-read = allow
+clipboard-write = allow
 
 # クリップボード連携
 copy-on-select = clipboard
