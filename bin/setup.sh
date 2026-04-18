@@ -21,7 +21,7 @@ while [[ $# -gt 0 ]]; do
       DRY_RUN=true
       shift
       ;;
-    -h|--help)
+    -h | --help)
       usage
       exit 0
       ;;

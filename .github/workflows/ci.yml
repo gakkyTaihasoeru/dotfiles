@@ -35,6 +35,30 @@ jobs:
             fi
           done
 
+  shfmt:
+    name: shfmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install shfmt
+        run: |
+          curl -fsSL -o /usr/local/bin/shfmt \
+            https://github.com/mvdan/sh/releases/latest/download/shfmt_v3.11.0_linux_amd64
+          chmod +x /usr/local/bin/shfmt
+      - name: Check shell formatting
+        run: shfmt -d -i 2 -ci -bn ./bin ./claude/statusline.sh
+
+  python-syntax:
+    name: Python Syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile Python sources
+        run: |
+          set -e
+          find ./scripts ./claude/hooks ./.codex/hooks -type f -name '*.py' -print0 \
+            | xargs -0 python3 -m py_compile
+
   install-dry-run:
     name: Install Dry Run
     runs-on: macos-latest
