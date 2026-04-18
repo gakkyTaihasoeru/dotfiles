@@ -1,3 +1,7 @@
 __pycache__/
 *.pyc
 Brewfile.local
+
+# Claude Code project-local runtime state (scheduled_tasks.lock, etc.)
+# This is distinct from /claude/, which is the versioned global config.
+/.claude/
