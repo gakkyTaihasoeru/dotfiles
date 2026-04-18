@@ -1,39 +1,37 @@
-# --- 外観設定 ---
-theme = dark:GitHub Dark Default,light:GitHub Light Default
-font-family = "Hack Nerd Font"
-font-size = 14
+# Terminal appearance
+
+theme = dark:Catppuccin Mocha,light:Catppuccin Latte
+font-family = "JetBrainsMono Nerd Font"
+font-size = 16
+font-feature = -calt
+
 term = xterm-ghostty
 
-window-decoration = auto
-confirm-close-surface = true
-
 window-save-state = always
+window-decoration = auto
 
 quit-after-last-window-closed = true
 
+confirm-close-surface = true
+
 background-opacity = 1
 
+cursor-style = block
+cursor-style-blink = true
+
 macos-titlebar-style = transparent
-
 macos-titlebar-proxy-icon = visible
-
-# --- 挙動設定 ---
-# OptionキーをMetaキー(Alt)として扱う（Emacs/Vim/Shell移動に必須）
 macos-option-as-alt = true
-
 macos-auto-secure-input = true
-working-directory = home
+scrollback-limit = 10000000
 
-# シェル統合
-shell-integration = detect
+# Shell integration
 
-shell-integration-features = cursor,sudo,title,path
+shell-integration = zsh
+shell-integration-features = cursor,sudo,title,ssh-env
 
-# Editor / clipboard friendly defaults
-clipboard-read = allow
-clipboard-write = allow
+# Clipboard and link handling
 
-# クリップボード連携
 copy-on-select = clipboard
 
 link-url = true

@@ -1,22 +1,29 @@
 [settings]
-paranoid = true
-not_found_auto_install = false
-disable_backends = ["asdf"]
+# Supply-chain hardening
+paranoid = true                                       # verify checksums, stricter backend checks
+not_found_auto_install = false                        # never install on missing tool
+disable_backends = ["asdf"]                           # block unsigned asdf shell plugins
+experimental = false                                  # block experimental features
+locked = true                                         # require lockfile-resolved URLs on install
+plugin_autoupdate_last_check_duration = "never"       # disable silent plugin updates
+trusted_config_paths = ["~/work", "~/work/ghq"]       # only mise.toml under these is auto-trusted
+idiomatic_version_file_enable_tools = []              # disable .tool-versions / .python-version auto-detect
 
 [tools]
-awscli = "latest"
-gemini-cli = "latest"
-gh = "latest"
-go = "1.24"
-jq = "latest"
-k9s = "latest"
-kind = "latest"
-kubectl = "1.33"
-minikube = "latest"
-neovim = "latest"
-node = "22"
-python = "3.12"
-terraform = "1.11"
-uv = "latest"
-helm = "latest"
-yq = "latest"
+awscli = "2.34.30"
+gemini-cli = "0.38.1"
+go = "1.26.2"
+helm = "4.1.4"
+jq = "1.8.1"
+k9s = "0.50.18"
+kind = "0.31.0"
+kubectl = "1.35.4"
+minikube = "1.38.1"
+neovim = "0.12.1"
+node = "25.9.0"
+python = "3.14.4"
+rust = "1.94.1"
+terraform = "1.14.8"
+uv = "0.11.7"
+yq = "4.52.5"
+zig = "0.16.0"

@@ -1,10 +1,10 @@
 {
   // =================================================
   // 0. 共通設定: VSCode 全体に影響する基本設定
-  "editor.fontFamily": "Hack Nerd Font Mono, Menlo",
+  "editor.fontFamily": "JetBrainsMono Nerd Font",
   "editor.fontSize": 16,
   "window.zoomLevel": 0,
-  "workbench.colorTheme": "GitHub Dark Default",
+  "workbench.colorTheme": "Catppuccin Mocha",
 
   // =================================================
   // 1. エディタ動作／内部操作設定
@@ -13,7 +13,7 @@
   "editor.bracketPairColorization.enabled": true,
   "editor.codeActionsOnSave": {
     "source.organizeImports": "always",
-    "source.fixAll": "always"
+    "source.fixAll": "always",
   },
   "editor.cursorBlinking": "smooth",
   "editor.cursorSmoothCaretAnimation": "on",
@@ -38,7 +38,10 @@
   "git.autofetch": true,
   "github.copilot.chat.localeOverride": "ja",
   "github.copilot.enable": {
-    "*": true
+    "*": true,
+    "plaintext": true,
+    "markdown": false,
+    "scminput": false,
   },
 
   // =================================================
@@ -61,14 +64,14 @@
     "!Select sequence",
     "!Split sequence",
     "!Sub",
-    "!Transform mapping"
+    "!Transform mapping",
   ],
   "yaml.format.enable": true,
   "yaml.validate": true,
   "yaml.completion": true,
   "[terraform]": {
     "editor.defaultFormatter": "hashicorp.terraform",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
   },
 
   // =================================================
@@ -80,7 +83,7 @@
     "files.trimTrailingWhitespace": false,
     "editor.wordWrap": "on",
     "editor.tabSize": 2,
-    "editor.insertSpaces": true
+    "editor.insertSpaces": true,
   },
   "markdown.styles": [".vscode/markdown-custom.css"],
   "markdown.preview.scrollPreviewWithEditor": false,
@@ -94,14 +97,14 @@
     "editor.quickSuggestions": {
       "other": true,
       "comments": false,
-      "strings": true
+      "strings": true,
     },
     "editor.defaultFormatter": "redhat.vscode-yaml",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
   },
   "[github-actions-workflow]": {
     "editor.defaultFormatter": "redhat.vscode-yaml",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
   },
 
   // =================================================
@@ -113,5 +116,6 @@
   "workbench.settings.applyToAllProfiles": ["editor.fontSize"],
   "workbench.startupEditor": "newUntitledFile",
   "redhat.telemetry.enabled": false,
-  "workbench.editor.enablePreview": false
+  "workbench.editor.enablePreview": false,
+  "workbench.iconTheme": "catppuccin-mocha",
 }

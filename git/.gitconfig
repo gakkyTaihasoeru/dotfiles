@@ -1,50 +1,71 @@
-# Core settings
 [core]
 	editor = vim -c \"set fenc=utf-8\"
 	commentChar = >
 	quotepath = false
 	pager = delta
+	ignorecase = true
+	excludesfile = /Users/rh1/.gitignore_global
 
-# User information
 [user]
 	name = gakkyTaihasoeru
 	email = gakky.taihasoeru@gmail.com
-	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPEdA62Ic8Ss32IkYxOCLM0bpJ5CxzFXNKn1zOSQ3MgO 
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPEdA62Ic8Ss32IkYxOCLM0bpJ5CxzFXNKn1zOSQ3MgO
 
-# Commit settings
 [commit]
 	gpgsign = true
 
-# GPG settings
 [gpg]
 	format = ssh
 [gpg "ssh"]
 	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
 
-# Merge, pull, and push settings
+[init]
+	defaultBranch = main
+
 [merge]
 	ff = false
+	conflictStyle = zdiff3
+
 [pull]
 	ff = only
-[push]
-	default = nothing
+	rebase = false
 
-# Diff settings
+[push]
+	default = current
+	autoSetupRemote = true
+	followTags = true
+
+[rebase]
+	autoStash = true
+	autoSquash = true
+	updateRefs = true
+
+[fetch]
+	prune = true
+	pruneTags = true
+
+[branch]
+	sort = -committerdate
+
+[rerere]
+	enabled = true
+
 [diff]
 	algorithm = histogram
 	colorMoved = default
 
-# Delta settings
 [delta]
 	navigate = true
+	dark = true
 	side-by-side = true
 	line-numbers = true
-	syntax-theme = Monokai Extended
+	syntax-theme = Catppuccin Mocha
 
-# Interactive mode settings
+[tag]
+	sort = version:refname
+
 [interactive]
 	diffFilter = delta --color-only
 
-# Tools
 [ghq]
 	root = /Users/rh1/work/ghq
