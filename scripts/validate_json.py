@@ -6,15 +6,18 @@ import re
 import sys
 
 
+JSONC_PREFIXES = {("vscode",), (".vscode",)}
+
+
 def load_content(path: pathlib.Path) -> str:
     text = path.read_text(encoding="utf-8")
-    is_jsonc = path.parts[:1] in [("vscode",), (".vscode",)]
-    if not is_jsonc:
+    if path.parts[:1] not in JSONC_PREFIXES:
         return text
 
-    return "\n".join(
+    stripped = "\n".join(
         line for line in text.splitlines() if not re.match(r"^\s*//", line)
     )
+    return re.sub(r",(\s*[}\]])", r"\1", stripped)
 
 
 def main() -> int:
