@@ -12,20 +12,13 @@ fi
 export ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
 [[ -d "$ZSH_CACHE_DIR" ]] || mkdir -p "$ZSH_CACHE_DIR"
 
-if [[ -z "${EDITOR:-}" ]]; then
-  if (( $+commands[nvim] )); then
-    export EDITOR="nvim"
-  else
-    export EDITOR="vi"
-  fi
-fi
-export VISUAL="${VISUAL:-$EDITOR}"
-
 path=(
   "$HOME/.local/bin"
   "$BREW_PREFIX/bin"
   $path
 )
+
+eval "$(mise activate zsh)"
 
 export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
 
@@ -112,6 +105,18 @@ alias gl='git log --oneline --graph --decorate'
 alias gb='git branch -vv'
 alias gd='git diff'
 
+if (( $+commands[nvim] )); then
+  if [[ -z "${EDITOR:-}" || "$EDITOR" == "vi" || "$EDITOR" == "vim" ]]; then
+    export EDITOR="nvim"
+  fi
+  if [[ -z "${VISUAL:-}" || "$VISUAL" == "vi" || "$VISUAL" == "vim" ]]; then
+    export VISUAL="$EDITOR"
+  fi
+else
+  export EDITOR="${EDITOR:-vi}"
+  export VISUAL="${VISUAL:-$EDITOR}"
+fi
+
 # ==============================
 # fzf設定
 # ==============================
@@ -159,7 +164,6 @@ FZF_SHELL_DIR="$BREW_PREFIX/opt/fzf/shell"
 # ==============================
 
 eval "$(zoxide init zsh)"
-eval "$(mise activate zsh)"
 eval "$(starship init zsh)"
 eval "$(atuin init zsh)"
 
