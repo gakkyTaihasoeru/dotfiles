@@ -29,12 +29,12 @@ style = "bold blue"
 truncation_length = 4
 truncate_to_repo = false
 truncation_symbol = "…/"
-read_only = " "
+read_only = " "
 read_only_style = "bold peach"
 format = "[$path]($style)[$read_only]($read_only_style) "
 
 [git_branch]
-symbol = " "
+symbol = " "
 style = "bold mauve"
 format = "[$symbol$branch]($style) "
 
@@ -68,12 +68,12 @@ symbol = "󱃾 "
 style = "bold sapphire"
 format = "[$symbol$context( ($namespace))]($style) "
 detect_files = ["kustomization.yaml", "kustomization.yml", "Chart.yaml", "skaffold.yaml", "kubeconfig"]
-detect_folders = ["k8s", "kubernetes", "manifests", "helm", "kustomize"]
+detect_folders = ["k8s", "kustomize"]
 detect_extensions = []
 
 [aws]
 disabled = false
-symbol = " "
+symbol = " "
 style = "bold yellow"
 force_display = false
 format = "[$symbol$profile( ($region))]($style) "
@@ -85,27 +85,27 @@ style = "bold lavender"
 format = "[$symbol$workspace]($style) "
 
 [python]
-symbol = " "
+symbol = " "
 style = "bold yellow"
 format = 'via [${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
 
 [nodejs]
-symbol = " "
+symbol = " "
 style = "bold green"
 format = "via [$symbol($version )]($style)"
 
 [golang]
-symbol = " "
+symbol = " "
 style = "bold teal"
 format = "via [$symbol($version )]($style)"
 
 [rust]
-symbol = " "
+symbol = " "
 style = "bold maroon"
 format = "via [$symbol($version )]($style)"
 
 [jobs]
-symbol = " "
+symbol = " "
 style = "bold lavender"
 number_threshold = 1
 symbol_threshold = 1
