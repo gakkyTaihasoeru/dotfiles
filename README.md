@@ -129,6 +129,7 @@ dotfiles/
 │   ├── mise/config.toml          # mise tool バージョン管理
 │   ├── atuin/config.toml         # Atuin シェル履歴
 │   ├── bat/config                # bat テーマ
+│   ├── starship/starship.toml    # starship プロンプト (Catppuccin Mocha)
 │   └── nvim/
 │       ├── init.lua              # Neovim 設定 (lazy.nvim)
 │       ├── lazy-lock.json        # プラグイン版ロック

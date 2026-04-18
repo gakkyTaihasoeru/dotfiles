@@ -144,6 +144,7 @@ link_file "${REPO_ROOT}/tmux/.tmux.conf" "${HOME}/.tmux.conf"
 link_file "${REPO_ROOT}/dotconfig/mise/config.toml" "${HOME}/.config/mise/config.toml"
 link_file "${REPO_ROOT}/dotconfig/atuin/config.toml" "${HOME}/.config/atuin/config.toml"
 link_file "${REPO_ROOT}/dotconfig/bat/config" "${HOME}/.config/bat/config"
+link_file "${REPO_ROOT}/dotconfig/starship/starship.toml" "${HOME}/.config/starship.toml"
 
 # Neovim
 link_file "${REPO_ROOT}/dotconfig/nvim/init.lua" "${HOME}/.config/nvim/init.lua"
