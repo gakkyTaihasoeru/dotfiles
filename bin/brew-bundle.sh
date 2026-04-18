@@ -40,6 +40,7 @@ cleanup_brewfiles() {
   local apply="${1:-false}"
   local tmp
   tmp="$(mktemp "${TMPDIR:-/tmp}/dotfiles-brewfile.XXXXXX")"
+  # shellcheck disable=SC2064 # expand $tmp now; the file is owned by this invocation
   trap "rm -f '$tmp'" EXIT
 
   cat "$BASE_BREWFILE" >"$tmp"

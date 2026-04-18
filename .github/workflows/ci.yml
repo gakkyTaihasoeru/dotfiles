@@ -42,9 +42,13 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install shfmt
         run: |
-          curl -fsSL -o /usr/local/bin/shfmt \
-            https://github.com/mvdan/sh/releases/latest/download/shfmt_v3.11.0_linux_amd64
-          chmod +x /usr/local/bin/shfmt
+          version=$(curl -fsSL https://api.github.com/repos/mvdan/sh/releases/latest \
+            | grep -o '"tag_name": *"[^"]*"' | head -1 | cut -d'"' -f4)
+          echo "shfmt version: $version"
+          sudo curl -fsSL -o /usr/local/bin/shfmt \
+            "https://github.com/mvdan/sh/releases/download/${version}/shfmt_${version}_linux_amd64"
+          sudo chmod +x /usr/local/bin/shfmt
+          shfmt --version
       - name: Check shell formatting
         run: shfmt -d -i 2 -ci -bn ./bin ./claude/statusline.sh
 
