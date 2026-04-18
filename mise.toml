@@ -1,0 +1,90 @@
+[tasks.ghq-pull]
+description = "Fetch and fast-forward ghq repositories that have clean worktrees"
+run = """#!/usr/bin/env bash
+set -euo pipefail
+
+root="${GHQ_ROOT:-$HOME/work/ghq}"
+repos=0
+updated=0
+skipped=0
+
+while IFS= read -r gitdir; do
+  repo="${gitdir%/.git}"
+  repos=$((repos + 1))
+
+  branch="$(git -C "$repo" symbolic-ref --quiet --short HEAD 2>/dev/null || true)"
+  if [[ -z "$branch" ]]; then
+    echo "SKIP detached HEAD: $repo"
+    skipped=$((skipped + 1))
+    continue
+  fi
+
+  if ! git -C "$repo" diff --quiet --ignore-submodules -- || ! git -C "$repo" diff --cached --quiet --ignore-submodules --; then
+    echo "SKIP dirty worktree: $repo"
+    skipped=$((skipped + 1))
+    continue
+  fi
+
+  if ! git -C "$repo" rev-parse --verify "${branch}@{upstream}" >/dev/null 2>&1; then
+    echo "SKIP no upstream: $repo ($branch)"
+    skipped=$((skipped + 1))
+    continue
+  fi
+
+  git -C "$repo" fetch --prune --quiet
+
+  counts="$(git -C "$repo" rev-list --left-right --count "${branch}@{upstream}...$branch")"
+  behind="$(printf '%s' "$counts" | awk '{print $1}')"
+  ahead="$(printf '%s' "$counts" | awk '{print $2}')"
+
+  if [[ "$ahead" -gt 0 ]]; then
+    echo "SKIP local commits: $repo ($branch ahead $ahead)"
+    skipped=$((skipped + 1))
+    continue
+  fi
+
+  if [[ "$behind" -eq 0 ]]; then
+    echo "OK up-to-date: $repo"
+    continue
+  fi
+
+  echo "PULL $repo ($branch behind $behind)"
+  git -C "$repo" pull --ff-only --stat
+  updated=$((updated + 1))
+done < <(find "$root" -type d -name .git -prune | sort)
+
+echo "DONE repos=$repos updated=$updated skipped=$skipped"
+"""
+
+[tasks.brew-update]
+description = "Update Homebrew packages and install missing Brewfile dependencies without pruning extras"
+dir = "{{config_root}}"
+run = [
+  "brew update",
+  "brew upgrade",
+  "bash bin/brew-bundle.sh install",
+  "brew cleanup",
+]
+
+[tasks.brew-reconcile]
+description = "Preview Homebrew packages, casks, and VS Code extensions that would be removed by reconciliation"
+dir = "{{config_root}}"
+run = ["bash bin/brew-bundle.sh cleanup"]
+
+[tasks.brew-reconcile-apply]
+description = "Destructively remove Homebrew packages, casks, and VS Code extensions not listed in Brewfile"
+dir = "{{config_root}}"
+run = ["bash bin/brew-bundle.sh cleanup --apply", "brew cleanup"]
+
+[tasks.mise-update]
+description = "Upgrade mise-managed tools from the global toolset and prune old installs"
+run = ["mise upgrade", "mise prune -y"]
+
+[tasks.doctor]
+description = "Run brew/mise/dotfiles health checks"
+dir = "{{config_root}}"
+run = ["brew doctor", "mise doctor", "bash bin/check.sh"]
+
+[tasks.maintenance]
+description = "Run ghq sync, package/tool updates, and health checks"
+depends = ["ghq-pull", "brew-update", "mise-update", "doctor"]
