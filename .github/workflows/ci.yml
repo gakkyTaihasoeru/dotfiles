@@ -10,7 +10,7 @@ jobs:
     name: ShellCheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@2.0.0
         with:
@@ -21,7 +21,7 @@ jobs:
     name: Shell Syntax
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Validate shell scripts
         run: |
           set -e
@@ -39,7 +39,7 @@ jobs:
     name: shfmt
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Install shfmt
         run: |
           version=$(curl -fsSL https://api.github.com/repos/mvdan/sh/releases/latest \
@@ -56,7 +56,7 @@ jobs:
     name: Python Syntax
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Compile Python sources
         run: |
           set -e
@@ -67,7 +67,7 @@ jobs:
     name: Install Dry Run
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Validate install flow with dry-run
         run: bash ./bin/install.sh --dry-run --skip-brew --skip-mise --skip-macos
 
@@ -75,7 +75,7 @@ jobs:
     name: Lint (JSON / TOML / YAML)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Validate JSON
         run: |
