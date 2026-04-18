@@ -1,0 +1,351 @@
+# SRE Policy for Gemini CLI
+# priority: 0-999 (tier base: User tier = 4)
+# See https://geminicli.com/docs/core/policy-engine
+
+# ------------------------------------------------------------
+# DENY (priority 100): 破壊・不可逆・ホスト停止
+# ------------------------------------------------------------
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "rm -rf /",
+  "rm -rf ~",
+  "rm -rf $HOME",
+  "dd ",
+  "dd if=",
+  "mkfs",
+  "shutdown",
+  "reboot",
+  "halt",
+  "poweroff",
+  "chmod -R 777 /",
+  "chown -R root /",
+]
+decision = "deny"
+priority = 100
+denyMessage = "ホスト停止・不可逆な破壊操作は禁止されています。"
+
+# Git: 公開 / 履歴破壊系
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "git push --force",
+  "git push -f",
+  "git reset --hard origin/main",
+  "git reset --hard origin/master",
+  "git clean -fdx",
+  "git filter-branch",
+]
+decision = "deny"
+priority = 100
+denyMessage = "履歴破壊・force push は禁止。必要なら明示的に承認を取ってから手動で。"
+
+# Terraform: state 破壊
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "terraform destroy",
+  "terraform force-unlock",
+  "terraform state rm",
+  "terraform state mv",
+  "terraform state push",
+  "terraform workspace delete",
+]
+decision = "deny"
+priority = 100
+denyMessage = "terraform state を不可逆に変更する操作は禁止。"
+
+# Kubernetes / Helm: cluster 破壊
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "kubectl delete ns",
+  "kubectl delete namespace",
+  "kubectl drain",
+  "kubectl taint",
+  "helm uninstall",
+]
+decision = "deny"
+priority = 100
+denyMessage = "cluster スコープの破壊的操作は禁止。"
+
+# Docker: 環境ワイプ
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "docker system prune",
+  "docker volume prune",
+  "docker network prune",
+]
+decision = "deny"
+priority = 100
+
+# ------------------------------------------------------------
+# ASK_USER (priority 50): 副作用あり・要確認
+# ------------------------------------------------------------
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "git add",
+  "git commit",
+  "git push",
+  "git pull",
+  "git fetch",
+  "git checkout",
+  "git switch",
+  "git merge",
+  "git rebase",
+  "git cherry-pick",
+  "git revert",
+  "git stash",
+]
+decision = "ask_user"
+priority = 50
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "kubectl apply",
+  "kubectl delete",
+  "kubectl patch",
+  "kubectl edit",
+  "kubectl scale",
+  "kubectl rollout",
+  "kubectl cordon",
+  "kubectl uncordon",
+  "kubectl label",
+  "kubectl annotate",
+  "kubectl port-forward",
+  "kubectl exec",
+  "kubectl cp",
+]
+decision = "ask_user"
+priority = 50
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "helm upgrade",
+  "helm install",
+  "helm rollback",
+]
+decision = "ask_user"
+priority = 50
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "terraform apply",
+  "terraform init",
+]
+decision = "ask_user"
+priority = 50
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "docker build",
+  "docker run",
+  "docker exec",
+  "docker stop",
+]
+decision = "ask_user"
+priority = 50
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "aws s3 cp",
+  "aws s3 sync",
+  "aws s3 rm",
+]
+decision = "ask_user"
+priority = 50
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "curl -X POST",
+  "curl -X PUT",
+  "curl -X DELETE",
+  "curl -X PATCH",
+]
+decision = "ask_user"
+priority = 50
+
+# ------------------------------------------------------------
+# ALLOW (priority 10): 読み取り専用
+# ------------------------------------------------------------
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "git status",
+  "git diff",
+  "git log",
+  "git show",
+  "git grep",
+  "git blame",
+  "git branch",
+  "git tag",
+  "git remote",
+  "git config --get",
+]
+decision = "allow"
+priority = 10
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "terraform fmt",
+  "terraform validate",
+  "terraform plan",
+  "terraform show",
+  "terraform providers",
+  "terraform version",
+  "terraform workspace show",
+  "terraform init -backend=false",
+]
+decision = "allow"
+priority = 10
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "kubectl get",
+  "kubectl describe",
+  "kubectl logs",
+  "kubectl top",
+  "kubectl explain",
+  "kubectl api-resources",
+  "kubectl api-versions",
+  "kubectl version",
+  "kubectl config current-context",
+  "kubectl config get-contexts",
+  "kubectl config view",
+]
+decision = "allow"
+priority = 10
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "helm list",
+  "helm status",
+  "helm get",
+  "helm history",
+  "helm show",
+  "helm version",
+  "helm template",
+]
+decision = "allow"
+priority = 10
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "docker ps",
+  "docker images",
+  "docker inspect",
+  "docker logs",
+  "docker version",
+  "docker info",
+]
+decision = "allow"
+priority = 10
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "aws sts get-caller-identity",
+  "aws s3 ls",
+  "aws ec2 describe-",
+  "aws logs describe-",
+  "aws logs tail",
+  "aws logs filter-log-events",
+  "aws cloudwatch describe-",
+  "aws cloudwatch get-metric-",
+  "aws iam list-",
+  "aws iam get-",
+]
+decision = "allow"
+priority = 10
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "gcloud auth list",
+  "gcloud config list",
+  "gcloud projects list",
+  "gcloud compute instances list",
+  "gcloud compute instances describe",
+  "gcloud logging read",
+]
+decision = "allow"
+priority = 10
+
+# Network / process / disk inspection
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = [
+  "dig",
+  "nslookup",
+  "host ",
+  "ping -c",
+  "traceroute",
+  "curl -I",
+  "curl -sS",
+  "curl -fsSL",
+  "ss",
+  "netstat",
+  "ps",
+  "top -b",
+  "df",
+  "du",
+  "free",
+  "uname",
+  "uptime",
+  "whoami",
+  "date",
+  "pwd",
+  "ls",
+  "wc",
+  "sort",
+  "uniq",
+  "awk",
+  "sed -n",
+  "grep",
+  "rg",
+  "find",
+  "file ",
+  "stat",
+  "env",
+  "which",
+  "type ",
+  "jq",
+  "yq",
+]
+decision = "allow"
+priority = 10
+
+# ------------------------------------------------------------
+# File edit restrictions
+# 編集許可パスのホワイトリスト（絶対パス/相対パスどちらにもマッチ）
+# argsPattern は tool args の JSON 文字列に対する正規表現
+# ------------------------------------------------------------
+[[rule]]
+toolName = ["write_file", "replace"]
+argsPattern = '"file_path":"[^"]*/(docs|runbooks|terraform|helm|k8s|kubernetes|manifests|scripts|monitoring|dashboards|alerts)/'
+decision = "allow"
+priority = 60
+
+[[rule]]
+toolName = ["write_file", "replace"]
+argsPattern = '"file_path":"[^"]*/\.github/workflows/'
+decision = "allow"
+priority = 60
+
+# それ以外のファイル編集はデフォルトで ask_user
+[[rule]]
+toolName = ["write_file", "replace"]
+decision = "ask_user"
+priority = 40

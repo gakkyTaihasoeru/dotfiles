@@ -1,0 +1,79 @@
+# Top-level defaults (Opus 4.6 equivalent)
+model = "gpt-5.4"
+model_provider = "openai"
+model_reasoning_effort = "high"
+model_reasoning_summary = "auto"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+file_opener = "vscode"
+project_doc_max_bytes = 65536
+
+[shell_environment_policy]
+inherit = "core"
+
+[sandbox_workspace_write]
+network_access = false
+
+[history]
+persistence = "none"
+
+[features]
+codex_hooks = true
+
+# Trusted projects
+[projects."/Users/rh1/work"]
+trust_level = "trusted"
+
+[projects."/Users/rh1/work/ghq/github.com/gakkyTaihasoeru/dotfiles"]
+trust_level = "trusted"
+
+[projects."/Users/rh1"]
+trust_level = "trusted"
+
+[projects."/Users/rh1/work/ghq/github.com/gakkyTaihasoeru/PersonalVault"]
+trust_level = "trusted"
+
+# Profiles for task-specific switching (codex -p <name>)
+[profiles.research]
+model = "gpt-5.4-pro"
+model_reasoning_effort = "high"
+approval_policy = "on-request"
+sandbox_mode = "read-only"
+
+[profiles.review]
+model = "gpt-5.4"
+model_reasoning_effort = "high"
+approval_policy = "on-request"
+sandbox_mode = "read-only"
+
+[profiles.conservative]
+model = "gpt-5.4-mini"
+model_reasoning_effort = "low"
+approval_policy = "untrusted"
+sandbox_mode = "read-only"
+
+[profiles.ci]
+model = "gpt-5.4-mini"
+model_reasoning_effort = "low"
+approval_policy = "never"
+sandbox_mode = "read-only"
+
+[profiles.quick]
+model = "gpt-5.4-mini"
+model_reasoning_effort = "low"
+sandbox_mode = "read-only"
+
+[profiles.auto]
+model = "gpt-5.4-mini"
+model_reasoning_effort = "medium"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[profiles.trusted]
+model = "gpt-5.4"
+model_reasoning_effort = "medium"
+approval_policy = "never"
+sandbox_mode = "workspace-write"
+
+[plugins."github@openai-curated"]
+enabled = true
