@@ -103,11 +103,20 @@ run_shellcheck_if_available() {
   done < <(find ./bin -type f -name '*.sh' -print0)
 }
 
-validate_install_flow() {
-  echo "DRY   bin/install.sh"
-  bash ./bin/install.sh --dry-run --skip-brew --skip-mise --skip-macos >/dev/null
-  echo "DRY   bin/setup.sh"
-  bash ./bin/setup.sh --dry-run >/dev/null
+validate_chezmoi_apply() {
+  if ! command -v chezmoi >/dev/null 2>&1; then
+    echo "WARN  chezmoi not found; skipping chezmoi dry-run"
+    return 0
+  fi
+
+  local tmp_home
+  tmp_home="$(mktemp -d)"
+  trap 'rm -rf "$tmp_home"' RETURN
+
+  echo "CHEZ  chezmoi apply --dry-run (destination=$tmp_home)"
+  chezmoi apply --dry-run \
+    --source "${REPO_ROOT}/home" \
+    --destination "$tmp_home" >/dev/null
 }
 
 validate_json
@@ -116,6 +125,6 @@ validate_yaml
 validate_shell_syntax
 validate_brewfiles
 run_shellcheck_if_available
-validate_install_flow
+validate_chezmoi_apply
 
 echo "OK    repository checks passed"

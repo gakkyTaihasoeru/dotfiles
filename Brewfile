@@ -1,6 +1,7 @@
 brew "atuin"
 brew "bash"
 brew "bat"
+brew "chezmoi"
 brew "btop"
 brew "coreutils"
 brew "eza"

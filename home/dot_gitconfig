@@ -1,9 +1,8 @@
 [core]
-	editor = vim -c \"set fenc=utf-8\"
+	editor = nvim
 	commentChar = >
 	quotepath = false
 	pager = delta
-	ignorecase = true
 	excludesfile = /Users/rh1/.gitignore_global
 
 [user]
@@ -13,6 +12,7 @@
 
 [commit]
 	gpgsign = true
+	verbose = true
 
 [gpg]
 	format = ssh
@@ -43,16 +43,25 @@
 [fetch]
 	prune = true
 	pruneTags = true
+	fsckObjects = true
+
+[transfer]
+	fsckObjects = true
+
+[receive]
+	fsckObjects = true
 
 [branch]
 	sort = -committerdate
 
 [rerere]
 	enabled = true
+	autoUpdate = true
 
 [diff]
 	algorithm = histogram
 	colorMoved = default
+	colorMovedWS = allow-indentation-change
 
 [delta]
 	navigate = true
@@ -66,6 +75,12 @@
 
 [interactive]
 	diffFilter = delta --color-only
+
+[column]
+	ui = auto
+
+[help]
+	autocorrect = prompt
 
 [ghq]
 	root = /Users/rh1/work/ghq

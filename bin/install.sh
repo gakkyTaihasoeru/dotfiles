@@ -5,27 +5,37 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 DRY_RUN=false
-BACKUP_SUFFIX=".bak.$(date +%Y%m%d%H%M%S)"
+RUN_BREW=false
+RUN_MISE=false
 
 usage() {
   cat <<EOF
-Usage: bash bin/install.sh [--dry-run] [--skip-brew] [--skip-mise] [--skip-macos]
+Usage: bash bin/install.sh [--dry-run] [--brew] [--mise]
 
-Bootstrap this dotfiles repository on macOS.
+Bootstrap this dotfiles repository on macOS via chezmoi.
+
+The script is intentionally thin. It only handles steps that cannot be expressed
+as chezmoi state:
+
+  1. Install Homebrew if missing (chezmoi itself depends on it)
+  2. Install chezmoi if missing
+  3. Configure ~/.config/chezmoi/chezmoi.toml so sourceDir points to this repo
+  4. Run \`chezmoi apply\` (which triggers run_once scripts under home/.chezmoiscripts)
+
+Brewfile sync and \`mise install\` stay opt-in because they are slow and the
+user controls when to reconcile them.
 
 Options:
-  --dry-run    Show the commands without applying changes
-  --skip-brew   Skip applying Brewfile and optional Brewfile.local
-  --skip-mise   Skip \`mise install\`
-  --skip-macos  Skip \`bin/setup.sh\`
-  -h, --help    Show this help
+  --dry-run  Print the chezmoi commands without applying changes
+  --brew     Also run \`brew bundle\` against ./Brewfile after apply
+  --mise     Also run \`mise install\` after apply
+  -h, --help Show this help
 EOF
 }
 
 run() {
   if [[ "$DRY_RUN" == true ]]; then
-    printf '[dry-run] %q' "$1"
-    shift
+    printf '[dry-run]'
     printf ' %q' "$@"
     printf '\n'
   else
@@ -33,26 +43,18 @@ run() {
   fi
 }
 
-SKIP_BREW=false
-SKIP_MISE=false
-SKIP_MACOS=false
-
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --dry-run)
       DRY_RUN=true
       shift
       ;;
-    --skip-brew)
-      SKIP_BREW=true
+    --brew)
+      RUN_BREW=true
       shift
       ;;
-    --skip-mise)
-      SKIP_MISE=true
-      shift
-      ;;
-    --skip-macos)
-      SKIP_MACOS=true
+    --mise)
+      RUN_MISE=true
       shift
       ;;
     -h | --help)
@@ -72,107 +74,59 @@ if [[ "${OSTYPE:-}" != darwin* ]]; then
   exit 1
 fi
 
-require_cmd() {
-  local cmd="$1"
-  if ! command -v "$cmd" >/dev/null 2>&1; then
-    echo "Required command not found: $cmd" >&2
-    exit 1
-  fi
-}
-
-link_file() {
-  local src="$1"
-  local dst="$2"
-  local backup_path=""
-  local backup_label="Backed up"
-  local link_label="Linked"
-
-  run mkdir -p "$(dirname "$dst")"
-
+if [[ ! -x /opt/homebrew/bin/brew ]]; then
+  echo "==> Installing Homebrew"
   if [[ "$DRY_RUN" == true ]]; then
-    backup_label="Would back up"
-    link_label="Would link"
+    echo '[dry-run] /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+  else
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
+fi
 
-  if [[ -e "$dst" || -L "$dst" ]]; then
-    if [[ -L "$dst" ]] && [[ "$(readlink "$dst")" == "$src" ]]; then
-      echo "Already linked: $dst -> $src"
-      return
-    fi
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
-    backup_path="${dst}${BACKUP_SUFFIX}"
-    run mv "$dst" "$backup_path"
-    echo "${backup_label}: $dst -> $backup_path"
+if ! command -v chezmoi >/dev/null 2>&1; then
+  echo "==> Installing chezmoi"
+  run brew install chezmoi
+fi
+
+CHEZMOI_CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/chezmoi"
+CHEZMOI_CONFIG_FILE="${CHEZMOI_CONFIG_DIR}/chezmoi.toml"
+
+if [[ ! -f "$CHEZMOI_CONFIG_FILE" ]] || ! grep -Fq "sourceDir = \"${REPO_ROOT}\"" "$CHEZMOI_CONFIG_FILE" 2>/dev/null; then
+  echo "==> Writing ${CHEZMOI_CONFIG_FILE}"
+  if [[ "$DRY_RUN" == true ]]; then
+    echo "[dry-run] mkdir -p ${CHEZMOI_CONFIG_DIR}"
+    echo "[dry-run] write sourceDir = \"${REPO_ROOT}\" to ${CHEZMOI_CONFIG_FILE}"
+  else
+    mkdir -p "$CHEZMOI_CONFIG_DIR"
+    printf 'sourceDir = "%s"\n' "$REPO_ROOT" >"$CHEZMOI_CONFIG_FILE"
   fi
+fi
 
-  run ln -sfn "$src" "$dst"
-  echo "${link_label}: $dst -> $src"
-}
+echo "==> chezmoi apply"
+if [[ "$DRY_RUN" == true ]]; then
+  run chezmoi apply --dry-run --verbose
+else
+  run chezmoi apply --verbose
+fi
 
-if [[ "$SKIP_BREW" == false ]]; then
-  require_cmd brew
+if [[ "$RUN_BREW" == true ]]; then
+  echo "==> brew bundle"
   run bash "${REPO_ROOT}/bin/brew-bundle.sh" install
 fi
 
-if [[ "$SKIP_MISE" == false ]]; then
-  require_cmd mise
+if [[ "$RUN_MISE" == true ]]; then
+  echo "==> mise install"
+  if ! command -v mise >/dev/null 2>&1; then
+    echo "mise not found; install with --brew first or add it manually." >&2
+    exit 1
+  fi
   run mise install
 fi
 
-if [[ "$SKIP_MACOS" == false ]]; then
-  if [[ "$DRY_RUN" == true ]]; then
-    run bash "${REPO_ROOT}/bin/setup.sh" --dry-run
-  else
-    run bash "${REPO_ROOT}/bin/setup.sh"
-  fi
-fi
-
-# Shell (zsh)
-link_file "${REPO_ROOT}/zsh/.zshrc" "${HOME}/.zshrc"
-link_file "${REPO_ROOT}/zsh/.zshenv" "${HOME}/.zshenv"
-link_file "${REPO_ROOT}/zsh/.zprofile" "${HOME}/.zprofile"
-
-# Git
-link_file "${REPO_ROOT}/git/.gitconfig" "${HOME}/.gitconfig"
-link_file "${REPO_ROOT}/git/.gitignore_global" "${HOME}/.gitignore_global"
-
-# Terminal / multiplexer
-link_file "${REPO_ROOT}/dotconfig/ghostty/config" "${HOME}/.config/ghostty/config"
-link_file "${REPO_ROOT}/tmux/.tmux.conf" "${HOME}/.tmux.conf"
-
-# CLI tools
-link_file "${REPO_ROOT}/dotconfig/mise/config.toml" "${HOME}/.config/mise/config.toml"
-link_file "${REPO_ROOT}/dotconfig/atuin/config.toml" "${HOME}/.config/atuin/config.toml"
-link_file "${REPO_ROOT}/dotconfig/bat/config" "${HOME}/.config/bat/config"
-link_file "${REPO_ROOT}/dotconfig/starship/starship.toml" "${HOME}/.config/starship.toml"
-
-# Neovim
-link_file "${REPO_ROOT}/dotconfig/nvim/init.lua" "${HOME}/.config/nvim/init.lua"
-link_file "${REPO_ROOT}/dotconfig/nvim/lazy-lock.json" "${HOME}/.config/nvim/lazy-lock.json"
-
-# VS Code
-link_file "${REPO_ROOT}/vscode/settings.json" "${HOME}/Library/Application Support/Code/User/settings.json"
-
-# AI agents: Claude Code
-link_file "${REPO_ROOT}/claude/CLAUDE.md" "${HOME}/.claude/CLAUDE.md"
-link_file "${REPO_ROOT}/claude/settings.json" "${HOME}/.claude/settings.json"
-link_file "${REPO_ROOT}/claude/statusline.sh" "${HOME}/.claude/statusline.sh"
-link_file "${REPO_ROOT}/claude/rules/README.md" "${HOME}/.claude/rules/README.md"
-link_file "${REPO_ROOT}/claude/hooks/secret-scan.py" "${HOME}/.claude/hooks/secret-scan.py"
-link_file "${REPO_ROOT}/claude/hooks/sensitive-read.py" "${HOME}/.claude/hooks/sensitive-read.py"
-
-# AI agents: Gemini CLI
-link_file "${REPO_ROOT}/gemini/GEMINI.md" "${HOME}/.gemini/GEMINI.md"
-link_file "${REPO_ROOT}/gemini/settings.json" "${HOME}/.gemini/settings.json"
-link_file "${REPO_ROOT}/gemini/policies/sre_policy.toml" "${HOME}/.gemini/policies/sre_policy.toml"
-
-# AI agents: Codex CLI (global config)
-link_file "${REPO_ROOT}/codex/AGENTS.md" "${HOME}/.codex/AGENTS.md"
-link_file "${REPO_ROOT}/codex/config.toml" "${HOME}/.codex/config.toml"
-
 cat <<'EOF'
 
-Installation steps completed.
-Restart your shell to apply the new configuration:
+Bootstrap complete. Restart your shell to apply the new configuration:
   exec zsh
 EOF
