@@ -50,7 +50,7 @@ jobs:
           sudo chmod +x /usr/local/bin/shfmt
           shfmt --version
       - name: Check shell formatting
-        run: shfmt -d -i 2 -ci -bn ./bin ./claude/statusline.sh
+        run: shfmt -d -i 2 -ci -bn ./bin ./home/dot_claude/executable_statusline.sh
 
   python-syntax:
     name: Python Syntax
@@ -60,16 +60,22 @@ jobs:
       - name: Compile Python sources
         run: |
           set -e
-          find ./scripts ./claude/hooks ./.codex/hooks -type f -name '*.py' -print0 \
+          find ./scripts ./home/dot_claude/hooks ./.codex/hooks -type f -name '*.py' -print0 \
             | xargs -0 python3 -m py_compile
 
-  install-dry-run:
-    name: Install Dry Run
+  chezmoi-dry-run:
+    name: Chezmoi Dry Run
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Validate install flow with dry-run
-        run: bash ./bin/install.sh --dry-run --skip-brew --skip-mise --skip-macos
+      - name: Install chezmoi
+        run: brew install chezmoi
+      - name: Validate chezmoi apply against an empty home
+        run: |
+          tmp_home="$(mktemp -d)"
+          chezmoi apply --dry-run --verbose \
+            --source "${GITHUB_WORKSPACE}/home" \
+            --destination "$tmp_home"
 
   lint:
     name: Lint (JSON / TOML / YAML)

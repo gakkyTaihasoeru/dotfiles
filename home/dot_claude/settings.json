@@ -199,10 +199,6 @@
     ]
   },
   "model": "opus",
-  "statusLine": {
-    "type": "command",
-    "command": "/Users/rh1/.claude/statusline.sh"
-  },
   "hooks": {
     "PreToolUse": [
       {
@@ -224,5 +220,12 @@
         ]
       }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "/Users/rh1/.claude/statusline.sh"
+  },
+  "enabledPlugins": {
+    "lua-lsp@claude-plugins-official": true
   }
 }

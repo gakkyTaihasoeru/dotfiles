@@ -1,0 +1,13 @@
+#!/bin/bash
+{{- /* Install Homebrew on first apply. Only runs on macOS. */}}
+{{- if eq .chezmoi.os "darwin" }}
+set -euo pipefail
+
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  echo "Homebrew already installed at /opt/homebrew"
+  exit 0
+fi
+
+echo "Installing Homebrew..."
+NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+{{- end }}

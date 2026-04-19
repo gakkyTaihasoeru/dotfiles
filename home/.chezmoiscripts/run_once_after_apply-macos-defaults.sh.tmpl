@@ -1,0 +1,22 @@
+#!/bin/bash
+{{- /* Apply macOS defaults once. Port of bin/setup.sh. */}}
+{{- if eq .chezmoi.os "darwin" }}
+set -euo pipefail
+
+restart_if_running() {
+  local process="$1"
+  if pgrep -x "$process" >/dev/null 2>&1; then
+    killall "$process"
+  else
+    echo "Skip restarting ${process}: not running"
+  fi
+}
+
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+defaults write NSGlobalDomain AppleInterfaceStyle -string Dark
+defaults write NSGlobalDomain com.apple.keyboard.fnState -bool true
+defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+
+restart_if_running Finder
+restart_if_running SystemUIServer
+{{- end }}

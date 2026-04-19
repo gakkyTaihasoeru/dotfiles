@@ -6,18 +6,18 @@ import re
 import sys
 
 
-JSONC_PREFIXES = {("vscode",), (".vscode",)}
-
-
-def load_content(path: pathlib.Path) -> str:
-    text = path.read_text(encoding="utf-8")
-    if path.parts[:1] not in JSONC_PREFIXES:
-        return text
-
+def strip_jsonc(text: str) -> str:
     stripped = "\n".join(
         line for line in text.splitlines() if not re.match(r"^\s*//", line)
     )
     return re.sub(r",(\s*[}\]])", r"\1", stripped)
+
+
+def looks_like_vscode_settings(path: pathlib.Path) -> bool:
+    parts = path.parts
+    return path.name == "settings.json" and (
+        "Code" in parts or "vscode" in parts or ".vscode" in parts
+    )
 
 
 def main() -> int:
@@ -26,7 +26,10 @@ def main() -> int:
         return 2
 
     path = pathlib.Path(sys.argv[1])
-    json.loads(load_content(path))
+    text = path.read_text(encoding="utf-8")
+    if looks_like_vscode_settings(path):
+        text = strip_jsonc(text)
+    json.loads(text)
     return 0
 
 

@@ -77,3 +77,8 @@ sandbox_mode = "workspace-write"
 
 [plugins."github@openai-curated"]
 enabled = true
+
+[marketplaces.openai-bundled]
+last_updated = "2026-04-19T15:53:25Z"
+source_type = "local"
+source = "/Users/rh1/.codex/.tmp/bundled-marketplaces/openai-bundled"
