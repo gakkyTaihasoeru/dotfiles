@@ -150,9 +150,9 @@ dotfiles/
     │   ├── GEMINI.md
     │   ├── settings.json
     │   └── policies/sre_policy.toml
-    ├── dot_codex/                   # → ~/.codex/
+    ├── private_dot_codex/           # → ~/.codex/ (mode 0700)
     │   ├── AGENTS.md
-    │   └── config.toml
+    │   └── private_config.toml      #   → mode 0600 (auth / personality を含む)
     └── Library/Application Support/Code/User/settings.json   # → 同パス (VS Code)
 ```
 
@@ -216,14 +216,14 @@ dotfiles/
 
 ## AI エージェント設定
 
-`home/dot_claude/` / `home/dot_gemini/` / `home/dot_codex/` は各 CLI のグローバル設定を chezmoi 経由で管理します。
+`home/dot_claude/` / `home/dot_gemini/` / `home/private_dot_codex/` は各 CLI のグローバル設定を chezmoi 経由で管理します。Codex は auth/personality を含むため `private_` prefix で `~/.codex/` を 0700、`config.toml` を 0600 に強制します。
 `chezmoi apply` 後は以下の実ファイルとして配置されます。
 
 | chezmoi source | apply 先 |
 |---|---|
 | `home/dot_claude/...` | `~/.claude/...` |
 | `home/dot_gemini/...` | `~/.gemini/...` |
-| `home/dot_codex/{AGENTS.md,config.toml}` | `~/.codex/...` |
+| `home/private_dot_codex/{AGENTS.md,private_config.toml}` | `~/.codex/...` (dir 0700, config.toml 0600) |
 
 `home/dot_claude/hooks/executable_secret-scan.py` は Write/Edit/MultiEdit/NotebookEdit 前に走り、AWS / GitHub / Slack / Anthropic 等のトークンや PEM 秘密鍵を含むコミットを block します。
 `executable_sensitive-read.py` は Read ツールで機密ファイルを開く際に確認を挟みます。
