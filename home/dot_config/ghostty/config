@@ -3,7 +3,7 @@
 theme = dark:Catppuccin Mocha,light:Catppuccin Latte
 font-family = "JetBrainsMono Nerd Font"
 font-size = 16
-font-feature = -calt
+font-feature = -calt, -liga, -dligcalt
 
 term = xterm-ghostty
 
@@ -27,7 +27,7 @@ scrollback-limit = 10000000
 
 # Shell integration
 
-shell-integration = zsh
+shell-integration = detect
 shell-integration-features = cursor,sudo,title,ssh-env
 
 # Clipboard and link handling

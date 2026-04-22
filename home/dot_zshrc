@@ -63,6 +63,11 @@ source_if_exists() {
   [[ -r "$1" ]] && source "$1"
 }
 
+# Prefer Japanese tldr pages while keeping English fallback.
+tldr() {
+  LANG=ja_JP.UTF-8 LANGUAGE=ja command tldr "$@"
+}
+
 open_editor() {
   local -a editor_cmd
 

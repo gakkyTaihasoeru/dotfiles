@@ -2,6 +2,7 @@
   // =================================================
   // 0. 共通設定: VSCode 全体に影響する基本設定
   "editor.fontFamily": "JetBrainsMono Nerd Font",
+  "editor.fontLigatures": true,
   "editor.fontSize": 16,
   "window.zoomLevel": 0,
   "workbench.colorTheme": "Catppuccin Mocha",
@@ -9,14 +10,16 @@
   // =================================================
   // 1. エディタ動作／内部操作設定
   "breadcrumbs.enabled": true,
+  "diffEditor.ignoreTrimWhitespace": false,
   "editor.accessibilitySupport": "off",
   "editor.bracketPairColorization.enabled": true,
   "editor.codeActionsOnSave": {
-    "source.organizeImports": "always",
-    "source.fixAll": "always",
+    "source.organizeImports": "explicit",
+    "source.fixAll": "explicit",
   },
   "editor.cursorBlinking": "smooth",
   "editor.cursorSmoothCaretAnimation": "on",
+  "editor.guides.bracketPairs": true,
   "editor.minimap.enabled": false,
   "editor.renderLineHighlight": "all",
   "editor.renderWhitespace": "all",
@@ -30,7 +33,9 @@
   // 2. ファイル I/O / 保存動作
   "explorer.confirmDragAndDrop": false,
   "files.autoSave": "onFocusChange",
+  "files.eol": "\n",
   "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
 
   // =================================================
@@ -73,11 +78,35 @@
     "editor.defaultFormatter": "hashicorp.terraform",
     "editor.formatOnSave": true,
   },
+  "[terraform-vars]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true,
+  },
 
   // =================================================
   // 6. 各言語 / ファイルタイプ別設定
   "python.testing.pytestEnabled": true,
   "python.testing.pytestArgs": ["tests"],
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSave": true,
+  },
+  "[toml]": {
+    "editor.defaultFormatter": "tombi-toml.tombi",
+    "editor.formatOnSave": true,
+  },
 
   "[markdown]": {
     "files.trimTrailingWhitespace": false,
@@ -110,13 +139,16 @@
   // =================================================
   // 7. UI / Workbench / Terminal / テレメトリ
   "terminal.external.osxExec": "Ghostty.app",
+  "terminal.integrated.defaultProfile.osx": "zsh",
   "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font",
-  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.fontSize": 16,
   "terminal.integrated.gpuAcceleration": "auto",
+  "terminal.integrated.scrollback": 50000,
   "workbench.list.smoothScrolling": true,
   "workbench.settings.applyToAllProfiles": ["editor.fontSize"],
   "workbench.startupEditor": "newUntitledFile",
   "redhat.telemetry.enabled": false,
   "workbench.editor.enablePreview": false,
   "workbench.iconTheme": "catppuccin-mocha",
+  "editor.formatOnSave": true,
 }
