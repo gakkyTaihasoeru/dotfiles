@@ -1,0 +1,7 @@
+# Copy this file to Brewfile.local for machine-local packages.
+# Brewfile.local is gitignored and applied after the shared Brewfile.
+#
+# Example:
+# brew "doggo"
+# cask "orbstack"
+# vscode "ms-vscode.makefile-tools"

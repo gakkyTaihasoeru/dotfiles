@@ -1,14 +1,20 @@
+{{- $git := get . "git" | default (dict) -}}
+{{- $paths := get . "paths" | default (dict) -}}
+{{- $gitName := or (get $git "name") "gakkyTaihasoeru" -}}
+{{- $gitEmail := or (get $git "email") "gakky.taihasoeru@gmail.com" -}}
+{{- $gitSigningKey := or (get $git "signingkey") "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPEdA62Ic8Ss32IkYxOCLM0bpJ5CxzFXNKn1zOSQ3MgO" -}}
+{{- $ghqRoot := or (get $paths "ghqRoot") (printf "%s/work/ghq" .chezmoi.homeDir) -}}
 [core]
 	editor = nvim
 	commentChar = >
 	quotepath = false
 	pager = delta
-	excludesfile = /Users/rh1/.gitignore
+	excludesfile = {{ printf "%s/.gitignore" .chezmoi.homeDir | quote }}
 
 [user]
-	name = gakkyTaihasoeru
-	email = gakky.taihasoeru@gmail.com
-	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPEdA62Ic8Ss32IkYxOCLM0bpJ5CxzFXNKn1zOSQ3MgO
+	name = {{ $gitName | quote }}
+	email = {{ $gitEmail | quote }}
+	signingkey = {{ $gitSigningKey | quote }}
 
 [commit]
 	gpgsign = true
@@ -83,4 +89,4 @@
 	autocorrect = prompt
 
 [ghq]
-	root = /Users/rh1/work/ghq
+	root = {{ $ghqRoot | quote }}
