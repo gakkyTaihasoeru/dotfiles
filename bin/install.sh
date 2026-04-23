@@ -19,8 +19,8 @@ as chezmoi state:
 
   1. Install Homebrew if missing (chezmoi itself depends on it)
   2. Install chezmoi if missing
-  3. Configure ~/.config/chezmoi/chezmoi.toml so sourceDir points to this repo
-  4. Run \`chezmoi apply\` (which triggers run_once scripts under home/.chezmoiscripts)
+  3. Write a minimal bootstrap ~/.config/chezmoi/chezmoi.toml on first run
+  4. Run \`chezmoi apply\` (which then manages ~/.config/chezmoi/chezmoi.toml itself)
 
 Brewfile sync and \`mise install\` stay opt-in because they are slow and the
 user controls when to reconcile them.
@@ -92,15 +92,43 @@ fi
 
 CHEZMOI_CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/chezmoi"
 CHEZMOI_CONFIG_FILE="${CHEZMOI_CONFIG_DIR}/chezmoi.toml"
+EXPECTED_SOURCEDIR_LINE="sourceDir = \"${REPO_ROOT}\""
 
-if [[ ! -f "$CHEZMOI_CONFIG_FILE" ]] || ! grep -Fq "sourceDir = \"${REPO_ROOT}\"" "$CHEZMOI_CONFIG_FILE" 2>/dev/null; then
+write_bootstrap_chezmoi_config() {
+  cat <<EOF
+sourceDir = "${REPO_ROOT}"
+
+[data.git]
+name = "gakkyTaihasoeru"
+email = "gakky.taihasoeru@gmail.com"
+signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPEdA62Ic8Ss32IkYxOCLM0bpJ5CxzFXNKn1zOSQ3MgO"
+
+[data.paths]
+ghqRoot = "${HOME}/work/ghq"
+
+[diff]
+pager = "delta"
+
+[edit]
+command = "nvim"
+EOF
+}
+
+if [[ -f "$CHEZMOI_CONFIG_FILE" ]] && ! grep -Fq "$EXPECTED_SOURCEDIR_LINE" "$CHEZMOI_CONFIG_FILE" 2>/dev/null; then
+  echo "Existing ${CHEZMOI_CONFIG_FILE} points to a different sourceDir." >&2
+  echo "Refusing to overwrite unrelated chezmoi state." >&2
+  echo "Expected: ${EXPECTED_SOURCEDIR_LINE}" >&2
+  exit 1
+fi
+
+if [[ ! -f "$CHEZMOI_CONFIG_FILE" ]]; then
   echo "==> Writing ${CHEZMOI_CONFIG_FILE}"
   if [[ "$DRY_RUN" == true ]]; then
     echo "[dry-run] mkdir -p ${CHEZMOI_CONFIG_DIR}"
-    echo "[dry-run] write sourceDir = \"${REPO_ROOT}\" to ${CHEZMOI_CONFIG_FILE}"
+    echo "[dry-run] write bootstrap chezmoi config to ${CHEZMOI_CONFIG_FILE}"
   else
     mkdir -p "$CHEZMOI_CONFIG_DIR"
-    printf 'sourceDir = "%s"\n' "$REPO_ROOT" >"$CHEZMOI_CONFIG_FILE"
+    write_bootstrap_chezmoi_config >"$CHEZMOI_CONFIG_FILE"
   fi
 fi
 
