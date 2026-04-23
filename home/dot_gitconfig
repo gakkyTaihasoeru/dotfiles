@@ -3,7 +3,7 @@
 	commentChar = >
 	quotepath = false
 	pager = delta
-	excludesfile = /Users/rh1/.gitignore_global
+	excludesfile = /Users/rh1/.gitignore
 
 [user]
 	name = gakkyTaihasoeru
