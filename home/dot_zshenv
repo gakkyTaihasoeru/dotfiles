@@ -8,3 +8,8 @@ export HOMEBREW_NO_INSTALL_CLEANUP=1    # prevent surprise removal of older vers
 export HOMEBREW_NO_INSECURE_REDIRECT=1  # reject non-https / cross-domain redirects
 export HOMEBREW_NO_ENV_HINTS=1          # quiet env suggestion output
 export HOMEBREW_NO_ANALYTICS=1          # disable InfluxDB analytics upload
+
+typeset -U path PATH
+path=("$HOME/.local/bin" $path)
+
+export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"

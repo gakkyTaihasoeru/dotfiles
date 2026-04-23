@@ -4,23 +4,49 @@
 
 typeset -U path fpath
 
-BREW_PREFIX="/opt/homebrew"
+if [[ -n "${ZPROF:-}" ]]; then
+  zmodload zsh/zprof
+fi
+
+has() {
+  (( $+commands[$1] ))
+}
+
+source_if_exists() {
+  [[ -r "$1" ]] && source "$1"
+}
+
+BREW_PREFIX="${HOMEBREW_PREFIX:-/opt/homebrew}"
 if [[ ! -x "$BREW_PREFIX/bin/brew" ]] && (( $+commands[brew] )); then
   BREW_PREFIX="$(brew --prefix)"
 fi
 
 export ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
-[[ -d "$ZSH_CACHE_DIR" ]] || mkdir -p "$ZSH_CACHE_DIR"
+mkdir -p "$ZSH_CACHE_DIR"
 
-path=(
-  "$HOME/.local/bin"
-  "$BREW_PREFIX/bin"
-  $path
-)
+eval "$(mise activate zsh --shims)"
 
-eval "$(mise activate zsh)"
+mise() {
+  local subcommand=''
 
-export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+  subcommand="${1:-}"
+  if (( $# == 0 )); then
+    command "$BREW_PREFIX/bin/mise"
+    return
+  fi
+  shift
+
+  case "$subcommand" in
+    deactivate|shell|sh)
+      if [[ ! " $* " =~ ' --help ' ]] && [[ ! " $* " =~ ' -h ' ]]; then
+        eval "$(command "$BREW_PREFIX/bin/mise" "$subcommand" "$@")"
+        return $?
+      fi
+      ;;
+  esac
+
+  command "$BREW_PREFIX/bin/mise" "$subcommand" "$@"
+}
 
 # ==============================
 # zsh設定
@@ -47,21 +73,13 @@ setopt notify
 setopt pushd_ignore_dups
 setopt share_history
 
-export HISTFILE=~/.zsh_history
-export HISTSIZE=50000
-export SAVEHIST=50000
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=50000
 
 # ==============================
 # エイリアス・関数
 # ==============================
-
-has() {
-  (( $+commands[$1] ))
-}
-
-source_if_exists() {
-  [[ -r "$1" ]] && source "$1"
-}
 
 # Prefer Japanese tldr pages while keeping English fallback.
 tldr() {
@@ -208,6 +226,11 @@ else
     compinit -d "$_compdump"
   fi
 fi
+
+if [[ -s "$_compdump" && ( ! -s "${_compdump}.zwc" || "$_compdump" -nt "${_compdump}.zwc" ) ]]; then
+  zcompile "$_compdump"
+fi
+
 unset _compdump_fresh _compdump_stat _insecure_compdirs
 
 zstyle ':completion:*' menu select
@@ -230,12 +253,21 @@ eval "$(atuin init zsh)"
 
 source_if_exists "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
+_enable_bash_completion() {
+  (( ${+functions[complete]} )) || {
+    autoload -U +X bashcompinit
+    bashcompinit
+  }
+}
+
 if has terraform; then
-  _terraform_bin="$(command -v terraform)"
   terraform() {
+    local terraform_bin=''
+
+    terraform_bin="$(command -v terraform)" || return 1
     unfunction terraform
-    autoload -U +X bashcompinit && bashcompinit
-    complete -o nospace -C "$_terraform_bin" terraform
+    _enable_bash_completion || return 1
+    complete -o nospace -C "$terraform_bin" terraform
     command terraform "$@"
   }
 fi
@@ -257,12 +289,14 @@ if has helm; then
 fi
 
 if has aws; then
-  _aws_completer_bin="$(command -v aws_completer 2>/dev/null)"
-  if [[ -n "$_aws_completer_bin" ]]; then
+  if command -v aws_completer >/dev/null 2>&1; then
     aws() {
+      local aws_completer_bin=''
+
+      aws_completer_bin="$(command -v aws_completer)" || return 1
       unfunction aws
-      autoload -U +X bashcompinit && bashcompinit
-      complete -C "$_aws_completer_bin" aws
+      _enable_bash_completion || return 1
+      complete -C "$aws_completer_bin" aws
       command aws "$@"
     }
   fi
@@ -461,3 +495,7 @@ zle -N fzf-cd-widget
 bindkey -M emacs '\ec' fzf-cd-widget
 bindkey -M vicmd '\ec' fzf-cd-widget
 bindkey -M viins '\ec' fzf-cd-widget
+
+if [[ -n "${ZPROF:-}" ]]; then
+  zprof
+fi
