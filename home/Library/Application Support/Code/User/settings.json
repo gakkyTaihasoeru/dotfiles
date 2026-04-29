@@ -151,4 +151,5 @@
   "workbench.editor.enablePreview": false,
   "workbench.iconTheme": "catppuccin-mocha",
   "editor.formatOnSave": true,
+  "workbench.secondarySideBar.defaultVisibility": "hidden",
 }

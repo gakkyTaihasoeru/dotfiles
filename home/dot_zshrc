@@ -24,8 +24,7 @@ fi
 export ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
 mkdir -p "$ZSH_CACHE_DIR"
 
-eval "$(mise activate zsh --shims)"
-
+# mise shim activation lives in .zshenv so non-interactive shells see it.
 mise() {
   local subcommand=''
 
@@ -66,6 +65,7 @@ setopt hist_ignore_all_dups
 setopt hist_ignore_space
 setopt hist_reduce_blanks
 setopt hist_save_no_dups
+setopt hist_verify
 setopt interactive_comments
 setopt no_beep
 setopt no_flow_control
@@ -129,17 +129,7 @@ alias gl='git log --oneline --graph --decorate'
 alias gb='git branch -vv'
 alias gd='git diff'
 
-if (( $+commands[nvim] )); then
-  if [[ -z "${EDITOR:-}" || "$EDITOR" == "vi" || "$EDITOR" == "vim" ]]; then
-    export EDITOR="nvim"
-  fi
-  if [[ -z "${VISUAL:-}" || "$VISUAL" == "vi" || "$VISUAL" == "vim" ]]; then
-    export VISUAL="$EDITOR"
-  fi
-else
-  export EDITOR="${EDITOR:-vi}"
-  export VISUAL="${VISUAL:-$EDITOR}"
-fi
+# EDITOR/VISUAL are set in .zshenv so all shells (interactive or not) inherit them.
 
 # ==============================
 # fzf設定
@@ -241,6 +231,8 @@ if [[ -n "${LS_COLORS:-}" ]]; then
   zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 fi
 
+# Skip implicit widget rebinds; we don't redefine zle widgets after this point.
+ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 source_if_exists "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
 if [[ -t 0 && -t 1 ]]; then
@@ -301,6 +293,9 @@ if has aws; then
     }
   fi
 fi
+
+# Force emacs keymap regardless of $EDITOR (zsh otherwise picks vi mode when EDITOR=nvim/vi*).
+bindkey -e
 
 autoload -Uz edit-command-line
 zle -N edit-command-line

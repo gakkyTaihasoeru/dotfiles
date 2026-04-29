@@ -9,7 +9,28 @@ export HOMEBREW_NO_INSECURE_REDIRECT=1  # reject non-https / cross-domain redire
 export HOMEBREW_NO_ENV_HINTS=1          # quiet env suggestion output
 export HOMEBREW_NO_ANALYTICS=1          # disable InfluxDB analytics upload
 
-typeset -U path PATH
-path=("$HOME/.local/bin" $path)
+typeset -U path PATH fpath
+path=(
+  "$HOME/.local/bin"
+  /opt/homebrew/bin
+  /opt/homebrew/sbin
+  $path
+)
+
+# mise shims in zshenv so non-interactive shells (GUI subprocesses, cron, editors)
+# also resolve mise-managed runtimes.
+if (( $+commands[mise] )); then
+  eval "$(mise activate zsh --shims)"
+fi
+
+# EDITOR/VISUAL in zshenv so git/crontab/etc. spawned outside interactive sessions inherit it.
+if (( $+commands[nvim] )); then
+  export EDITOR=nvim
+elif (( $+commands[vim] )); then
+  export EDITOR=vim
+else
+  export EDITOR=vi
+fi
+export VISUAL=$EDITOR
 
 export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"

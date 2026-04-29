@@ -205,5 +205,6 @@
   },
   "enabledPlugins": {
     "lua-lsp@claude-plugins-official": false
-  }
+  },
+  "effortLevel": "xhigh"
 }
